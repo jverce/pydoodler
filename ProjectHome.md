@@ -1,0 +1,1 @@
+This software allows the user to draw in different colors.
