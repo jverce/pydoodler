@@ -1,3 +1,6 @@
+import sys
+sys.path.append('..')
+
 import unittest
 import pygame
 import menu
@@ -73,6 +76,25 @@ class TestMenu(unittest.TestCase):
         self.m.add(self.bogus_func, self.s)
         self.m.resize_canvas()
         self.assertNotEqual(self.m.canvas.get_rect, old_rect)
+
+    def test_select(self):
+        self.m.select((self.x, self.y))
+        self.assertIsNone(self.m.selected_item)
+
+    def test_selected(self):
+        mi = menu.MenuItem(self.bogus_func, self.s, self.x, self.y)
+        self.m.selected(mi)
+        self.assertEqual(self.m.selected_item, mi)
+        self.assertEqual(mi.image, mi.image_sel)
+
+    def test_unselected(self):
+        mi = menu.MenuItem(self.bogus_func, self.s, self.x, self.y)
+        self.m.unselected(mi)
+        self.assertEqual(mi.image, mi.image_nsel)
+
+    # This function should not throw any exception
+    def test_activate(self):
+        self.m.activate(0)
 
     def tearDown(self):
         pygame.quit()
