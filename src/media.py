@@ -23,13 +23,13 @@ COL_Skin = (255, 127, 127)
 
 class ImageManager:
     _images = {}
-    IMG_MenuCursor = "./data/images/cursor/HandSmall.png"
+    IMG_MenuCursor = "../data/images/cursor/HandSmall.png"
     NUM_MenuCursorTip = 25
-    IMG_DoodleCursor = "./data/images/cursor/fatpencilsmall.png"
+    IMG_DoodleCursor = "../data/images/cursor/fatpencilsmall.png"
     NUM_DoodleCursorTip = 0
     
-    TTF_Title = "./data/fonts/Another_.ttf"
-    TTF_MenuItem = "./data/fonts/Another_.ttf"
+    TTF_Title = "../data/fonts/Another_.ttf"
+    TTF_MenuItem = "../data/fonts/Another_.ttf"
     
     @staticmethod    
     def image(name):
@@ -56,10 +56,10 @@ class AudioManager:
     _music = {}
     _play_state = True
     _current_sound = None
-    SND_MenuItem = "./data/sounds/22267__zeuss__The_Chime.wav"
-    SND_MenuMusic = "./data/sounds/GameBoardMusic.wav"
-    SND_ColorSelect = "./data/sounds/70236_gdzxpo_bulle2.wav"
-    SND_Pencil = "./data/sounds/66137__theta4__scribble.wav"
+    SND_MenuItem = "../data/sounds/22267__zeuss__The_Chime.wav"
+    SND_MenuMusic = "../data/sounds/GameBoardMusic.wav"
+    SND_ColorSelect = "../data/sounds/70236_gdzxpo_bulle2.wav"
+    SND_Pencil = "../data/sounds/66137__theta4__scribble.wav"
     
     @staticmethod
     def play(name):
