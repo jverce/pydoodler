@@ -5,8 +5,8 @@ import media
 
 
 class ColorPanel:
-    def __init__(self, (x, y)=(0, 0)):
-        self.x, self.y = x, y
+    def __init__(self, pos=(0, 0)):
+        self.x, self.y = pos
         self.border_w = 10
         self.border_col = (0, 127, 127)
         self.items = []
@@ -61,7 +61,8 @@ class ColorPanel:
         for i in range(0, len(self.items)):
             self.items[i].paint(screen, self.positions[i])
         
-    def select(self, (x, y)):
+    def select(self, pos):
+        x, y = pos
         mouse_rect = pygame.Rect(x, y, 1, 1)
         for pos in self.positions:
             index = self.positions.index(pos)
@@ -79,28 +80,31 @@ class ColorPanel:
 
 
 class ColorItem:
-    def __init__(self, color, (w, h)=(50, 25)):
+    def __init__(self, color, dim=(50, 25)):
+        w, h = dim
         self.color = color
         self.rect = pygame.Surface((w, h))
     
     def get_rect(self):
         return self.rect.get_rect()
     
-    def paint(self, screen, (x, y)=(0, 0)):
+    def paint(self, screen, pos=(0, 0)):
+        x, y = pos
         self.rect.fill(self.color) 
         screen.blit(self.rect, (x, y))
         
 
 class DrawCanvas:
-    def __init__(self, (w, h), color_panel):
-        self.w, self.h = w, h
+    def __init__(self, dim, color_panel):
+        self.w, self.h = dim
         self.color_panel = color_panel
         self.back_color = media.COL_White
-        self.canvas = pygame.Surface((w, h))
+        self.canvas = pygame.Surface((self.w, self.h))
         self.canvas.fill(self.back_color)
         self.last_point = None
     
-    def add_point(self, (x, y)):
+    def add_point(self, pos):
+        x, y = pos
         color = self.color_panel.current_col
         try:
             pygame.draw.line(self.canvas, color, self.last_point, (x, y), 6)

@@ -52,7 +52,8 @@ class MenuScreen(Screen):
         except AttributeError:
             pass
     
-    def move(self, (x, y)):
+    def move(self, pos):
+        x, y = pos
         self.cursor_pos = x - media.ImageManager.NUM_MenuCursorTip, y
     
     def show(self):
@@ -163,7 +164,8 @@ class MessagePopup(Screen):
     def exit(self, arg):
         self.manager.bac_action()
     
-    def move(self, (x, y)):
+    def move(self, pos):
+        x, y = pos
         self.cursor_pos = x - media.ImageManager.NUM_MenuCursorTip, y
 
 
@@ -188,32 +190,37 @@ class DrawScreen(Screen):
         self.mouse_handler = event.DrawMouseEventHandler(self)
         self.key_handler = event.DrawKeyEventHandler(self)
     
-    def mouse_in_panel(self, (x, y)):
-        self.cursor_pos = x, y
+    def mouse_in_panel(self, pos):
+        self.cursor_pos = pos
+        x, y = pos
         cursor_r = pygame.Rect(x, y, 1, 1)
         panel_r = self.panel.get_rect()
         return cursor_r.colliderect(panel_r)
     
-    def draw_point(self, (x, y)):
+    def draw_point(self, pos):
+        x, y = pos
         self.canvas.add_point((x, y))        
     
-    def in_canvas(self, (x, y)):
+    def in_canvas(self, pos):
+        x, y = pos
         self.panel.select((x+media.ImageManager.NUM_MenuCursorTip, y))
         self.move_action = self.draw_point
         self.draw_point((x, y))
         in_panel = self.mouse_in_panel((x, y))
         self.sound_play_mode[in_panel](self.sound_change[in_panel])
     
-    def out_canvas(self, (x, y)):
+    def out_canvas(self, pos):
+        x, y = pos
         self.canvas.release_mouse()
         self.move_action = None
         media.AudioManager.stop_music()
     
-    def move(self, (x, y)):
-        in_panel = self.mouse_in_panel((x, y))
+    def move(self, pos):
+        x, y = pos
+        in_panel = self.mouse_in_panel(pos)
         self.cursor = self.cursor_change[in_panel]
         try:
-            self.move_action((x, y))
+            self.move_action(pos)
         except TypeError:
             return
     

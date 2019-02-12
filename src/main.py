@@ -1,10 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys
 import pygame
 import gui
-
-
 
 pygame.init()
 m = gui.GuiManager()
