@@ -7,7 +7,7 @@ import media
 class ColorPanel:
     def __init__(self, pos=(0, 0)):
         self.x, self.y = pos
-        self.border_w = 10
+        self.border_padding = 10
         self.border_col = (0, 127, 127)
         self.items = []
         self.positions = []
@@ -19,11 +19,10 @@ class ColorPanel:
     
     def add_color_item(self, item):        
         self.num_rows += 1
-        i = len(self.items) / self.num_rows
-        j = len(self.items) % self.num_rows
-        rect_w, rect_h = item.get_rect().size
-        x = i * rect_w + self.border_w
-        y = j * rect_h + self.border_w
+        vertical_pos = self.num_rows - 1
+        rect_h = item.get_rect().h
+        x = self.border_padding
+        y = vertical_pos * rect_h + self.border_padding
         self.items.append(item)
         self.positions.append((x, y))
         
@@ -36,8 +35,8 @@ class ColorPanel:
         total_w /= self.num_rows
         total_h /= len(self.items)
         total_h *= self.num_rows
-        total_w += 2 * self.border_w
-        total_h += 2 * self.border_w
+        total_w += 2 * self.border_padding
+        total_h += 2 * self.border_padding
         return (total_w, total_h)
     
     def get_size(self):
