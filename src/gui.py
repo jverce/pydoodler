@@ -207,11 +207,10 @@ class DrawScreen(Screen):
         self.canvas.add_point((x, y))        
     
     def in_canvas(self, pos):
-        x, y = pos
-        self.panel.select((x+media.ImageManager.NUM_MenuCursorTip, y))
+        self.panel.select(pos)
         self.move_action = self.draw_point
-        self.draw_point((x, y))
-        in_panel = self.is_cursor_in_panel((x, y))
+        self.draw_point(pos)
+        in_panel = self.is_cursor_in_panel(pos)
         self.sound_play_mode[in_panel](self.sound_change[in_panel])
     
     def out_canvas(self, pos):
