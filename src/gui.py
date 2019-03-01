@@ -57,11 +57,11 @@ class MenuScreen(Screen):
         self.cursor_pos = x - media.ImageManager.NUM_MenuCursorTip, y
     
     def show(self):
-        self.show_nocursor()
+        self.show_wo_cursor()
         self.screen.blit(self.cursor, self.cursor_pos)
         Screen.show(self)
         
-    def show_nocursor(self):
+    def show_wo_cursor(self):
         self.screen.fill((0, 0, 0))
         w, h = self.screen.get_size()
         title_w, title_h = self.title_image.get_size()
@@ -107,7 +107,7 @@ class MenuPopup(Screen):
     def show(self):
         menu_x, menu_y = self.menu_offset()
         self.menu.paint(self.screen)
-        self.background.show_nocursor()
+        self.background.show_wo_cursor()
         Screen.show(self, menu_x, menu_y)
         self.parent_screen.blit(self.cursor, self.cursor_pos)
 
@@ -149,7 +149,7 @@ class MessagePopup(Screen):
         return (msg_x, msg_y)
     
     def show(self):
-        self.background.show_nocursor()
+        self.background.show_wo_cursor()
         msg_x, msg_y = self.message_offset()
         self.screen.fill(self.color)
         for i in range(0, len(self.text)):
@@ -176,21 +176,26 @@ class DrawScreen(Screen):
         self.panel = GuiFactory.get_color_panel()
         self.canvas = drawing.DrawCanvas(parent_screen.get_size(), self.panel)
         self.cursor_pos = (0, 0)
-        self.cursor = media.ImageManager.image(media.ImageManager.IMG_DoodleCursor)
-        self.cursor_change = {}
-        self.cursor_change[True] = media.ImageManager.image(media.ImageManager.IMG_MenuCursor)
-        self.cursor_change[False] = media.ImageManager.image(media.ImageManager.IMG_DoodleCursor)
-        self.sound_change = {}
-        self.sound_change[True] = media.AudioManager.SND_ColorSelect
-        self.sound_change[False] = media.AudioManager.SND_Pencil
-        self.sound_play_mode = {}
-        self.sound_play_mode[True] = media.AudioManager.play
-        self.sound_play_mode[False] = media.AudioManager.play_music
+        self.cursor = media.ImageManager.image(
+            media.ImageManager.IMG_DoodleCursor)
+        self.cursor_change = {
+            True: media.ImageManager.image(media.ImageManager.IMG_MenuCursor),
+            False: media.ImageManager.image(
+                media.ImageManager.IMG_DoodleCursor),
+        }
+        self.sound_change = {
+            True: media.AudioManager.SND_ColorSelect,
+            False: media.AudioManager.SND_Pencil,
+        }
+        self.sound_play_mode = {
+            True: media.AudioManager.play,
+            False: media.AudioManager.play_music,
+        }
         self.move_action = None
         self.mouse_handler = event.DrawMouseEventHandler(self)
         self.key_handler = event.DrawKeyEventHandler(self)
     
-    def mouse_in_panel(self, pos):
+    def is_cursor_in_panel(self, pos):
         self.cursor_pos = pos
         x, y = pos
         cursor_r = pygame.Rect(x, y, 1, 1)
@@ -206,7 +211,7 @@ class DrawScreen(Screen):
         self.panel.select((x+media.ImageManager.NUM_MenuCursorTip, y))
         self.move_action = self.draw_point
         self.draw_point((x, y))
-        in_panel = self.mouse_in_panel((x, y))
+        in_panel = self.is_cursor_in_panel((x, y))
         self.sound_play_mode[in_panel](self.sound_change[in_panel])
     
     def out_canvas(self, pos):
@@ -217,7 +222,7 @@ class DrawScreen(Screen):
     
     def move(self, pos):
         x, y = pos
-        in_panel = self.mouse_in_panel(pos)
+        in_panel = self.is_cursor_in_panel(pos)
         self.cursor = self.cursor_change[in_panel]
         try:
             self.move_action(pos)
@@ -229,12 +234,22 @@ class DrawScreen(Screen):
         self.key_handler.handle(e)
     
     def show(self):
-        self.show_nocursor()
-        self.parent_screen.blit(self.cursor, self.cursor_pos)
-    
-    def show_nocursor(self):
+        self.show_wo_cursor()
+        self.show_cursor()
+
+    def show_wo_cursor(self):
         self.canvas.paint(self.parent_screen)
         self.panel.paint(self.parent_screen)
+
+    def show_cursor(self):
+        if self.is_cursor_in_panel(self.cursor_pos):
+            cursor_blit_pos = (
+                self.cursor_pos[0] - media.ImageManager.NUM_MenuCursorTip,
+                self.cursor_pos[1],
+            )
+        else:
+            cursor_blit_pos = self.cursor_pos
+        self.parent_screen.blit(self.cursor, cursor_blit_pos)
     
     def save(self, arg):
         x = self.panel.get_rect().w
